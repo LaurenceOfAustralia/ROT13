@@ -5,14 +5,18 @@ CHARSET = [
 
 # Loop back to zero
 def new_index(start, add)
-    result = start
+    result = start + add
 
-    add.times do
-        if result == 25
-            result = 0
-        else 
-            result += 1
-        end
+    #add.times do
+    #    if result == 25
+    #        result = 0
+    #    else 
+    #        result += 1
+    #    end
+    #end
+
+    if result >= 25
+        result = result - 25
     end
 
     result
