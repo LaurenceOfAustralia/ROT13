@@ -61,7 +61,6 @@ end
 def solve(message)
     results = []
     for i in 1..25 do
-        #puts "Testing ROT_#{i}"
         results.push test_offset(i, message)
     end
 
