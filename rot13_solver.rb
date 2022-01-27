@@ -20,10 +20,10 @@ def new_index(start, add)
     result
 end
 
-def rot_x(offset, content)
-    content = content.upcase
+def rot_x(offset, message)
+    message = message.upcase
     result = ""
-    content.chars do |c_char|
+    message.chars do |c_char|
         CHARSET.each_with_index do |set_char, i|
             if set_char == c_char
                 result << CHARSET[new_index(i, offset)]
@@ -38,13 +38,14 @@ def rot_x(offset, content)
     result
 end
 
+# Test all the words in our wordlist on one offset
 def test_offset(offset, message)
     rot_message = rot_x(offset, message)
     num_incl_words = 0
     $words.each_with_index do |word, i|
+        # This is purely cosmetic, 1113 is just to make sure we have cool numbers whilst not reducing performance too much
         if i % 1113 == 0
-            print "\r"
-            print "#{i}/#{$words.length} words tested"
+            print "\rROT#{offset} #{i}/#{$words.length} words tested"
         end
 
         if rot_message.include? word.upcase
@@ -52,9 +53,7 @@ def test_offset(offset, message)
         end
     end
 
-    print "\r"
-    print "#{$words.length}/#{$words.length}"
-    puts "\n\n"
+    print "\rROT#{offset} #{$words.length}/#{$words.length}"
 
     [num_incl_words, offset]
 end
@@ -62,19 +61,17 @@ end
 def solve(message)
     results = []
     for i in 1..25 do
-        puts "Testing ROT_#{i}"
+        #puts "Testing ROT_#{i}"
         results.push test_offset(i, message)
     end
 
     results = results.sort.reverse
-    puts "This message is most likely decipherable with ROT_#{results[0][1]}.\nThe deciphered text is...\n#{rot_x(results[0][1], message)}"
+    puts "\rThis message is most likely decipherable with ROT_#{results[0][1]}\nThe deciphered text is...\n#{rot_x(results[0][1], message)}"
 end
 
+# rot13_solver.rb {content_to_solve}
 
-# rot13_solver.rb {content_to_crack}
-
-
-# Taken from https://github.com/dwyl/english-words/, thanks dwyl
+# Wordlist taken from https://github.com/dwyl/english-words/, thanks dwyl
 File.readlines('words_alpha.txt').each do |word|
     $words.push(word.chomp)
 end
